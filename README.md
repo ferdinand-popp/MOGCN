@@ -11,128 +11,40 @@
 -->
 
 
+# MOGCN: Integrated data analysis with graph machine learning using multi-omics and clinical datasets
+Cluster patients based on their multiomics data and clinical utilizing unsupervised graph autoencoders. Adapted from the [Simple and Effective Graph Autoencoders with One-Hop Linear Models](https://arxiv.org/pdf/2001.07614v1.pdf)(Salha et al., 2020) and [A Multi-Omics Integration Method Based on Graph Convolutional Network for Cancer Subtype Analysis](https://www.frontiersin.org/articles/10.3389/fgene.2022.806842/pdf)(Li et al., 2022) in PyTorch Geometric.
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+## About the project
+Project based on pytorch-geometric. It uses clinical EHR, and multi omics data from the TCGA Study [TCGA Study](https://www.cancer.gov/about-nci/organization/ccg/research/structural-genomics/tcga). The files are preprocessed to positive values.
+### 1. Preprocess multi-omics data with a multi-modal autoencoder
+Every omics file need the ID as the first column and each encoder feeds to a shared latent space, which integrates the representations of all omics for one patient.
+Afterwards the latent representation is extracted and the clinical input features are appened.
+### 2. Generate a patient similarity graph. 
+Patient nodes (consisting of unprocessed omics and clinical data) are used to generate a similarity matrix with the similarity network fusion (SNF). Based on this matrix patient nodes have an edge connecting them if their distance is above a set threshold and no edge if it is below. The feature matrix and the adjacency matrix are stored in a PyTorch Data Object.
+### 3. Train graph autoencoders 
+GAE are graph convolutional nets that integrate feature and adjacency information. The resulting latent represenation is decoded to reconstruct the adjacency 
+information and the loss is the mean squared error between the original matrix and the reconstructed one.
+Various architectures from the pytorch geometric project are included and they all result in a latent representation after training. Mainly using **simple linear AE**, **GAE**, **VGAE**, **variational simple linear AE**, **GraphSAGE**, **GAT**, etc..
+### 4. Clustering analysis for the latent represenation of the patients 
+The latent represenation can the be projected via an dimensionality reduction (UMAP) and clustered (Agglomerative Clustering and DBSCAN). An survival analysis is performed on the clustered patients afterwards.
 
-<!-- PROJECT LOGO -->
-<br />
-<h1>Placeholder for Master Thesis and Poster Presentation at ICSB 2022 Berlin</h1>
-<p align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+## Getting started
+For GPU usage please check CUDA (min version 10.1) distributions in dependencies and in the requirements in the following links.
+Conda environment preferred:
+follow installation steps for pytorch under (min version 1.4.0): [Pytorch Installation](https://pytorch.org/get-started/locally/)
 
-  <h3 align="center">project_title</h3>
+follow installation steps for pytorch geometric under (min version 1.6): [PyG Docs](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html) and [PyG Installation](https://github.com/rusty1s/pytorch_geometric/blob/master/README.md#installation)
 
-  <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
-  </p>
-</p>
+follow installation steps for Weights and Biases tracking under : [WandB - Quickstart](https://docs.wandb.ai/quickstart)
+
+Remaining required packages under [Dependencies](/Dependencies)
 
 
-
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
-
-
-### Built With
-
-* []()
-* []()
-* []()
-
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-To get a local copy up and running follow these simple steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-See the [open issues](https://github.com/github_username/repo_name/issues) for a list of proposed features (and known issues).
-
-
+## Executing 
+To run the pipeline, insert the file urls into train.py and check the parameters how the pipeline should be run (supervised or unsupervised). Afterwards spin up wandb: 'wandb server start' in terminal. Then you can run the main file:  
+```python
+train.py
+```
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -157,14 +69,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
-
-
+Ferdinand Popp - ferdinand.popp@proton.me
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
+## Acknowledgements WIP
 
 * []()
 * []()
