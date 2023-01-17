@@ -1,0 +1,17 @@
+pandas~=1.4.2
+numpy~=1.22.4
+torch~=1.12.0+cu116
+networkx~=2.8.5
+matplotlib~=3.5.2
+seaborn~=0.11.2
+wandb~=0.13.3
+tqdm~=4.64.0
+scikit-learn~=1.1.1
+torchmetrics~=0.9.3
+lifelines~=0.27.1
+plotly~=5.9.0
+scipy~=1.8.1
+setuptools~=60.2.0
+jupyter~=1.0.0
+polars~=0.13.58
+bamboolib~=1.30.18
