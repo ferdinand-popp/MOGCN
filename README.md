@@ -37,7 +37,7 @@ follow installation steps for pytorch geometric under (min version 1.6): [PyG Do
 
 follow installation steps for Weights and Biases tracking under : [WandB - Quickstart](https://docs.wandb.ai/quickstart)
 
-Remaining required packages under [Dependencies](/Dependencies)
+Remaining required packages under [Requirements](requirements.txt)
 
 
 ## Executing 
