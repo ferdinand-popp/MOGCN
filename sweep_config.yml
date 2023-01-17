@@ -1,0 +1,46 @@
+  command:
+    - ${env}
+    - D:\FPOPP\MoGCN\venv\Scripts\python.exe
+    - ${program}
+    - ${args}
+  method: bayes
+  metric:
+    goal: maximize
+    name: AUC #Silhoutte_avg_score
+  parameters:
+    dropout:
+      distribution: uniform
+      max: 0.75
+      min: 0.25
+    epochs:
+      distribution: int_uniform
+      max: 600
+      min: 300
+    hidden:
+      distribution: int_uniform
+      max: 128
+      min: 6
+    learningrate:
+      distribution: uniform
+      max: 0.002
+      min: 0.0005
+    out_channels:
+      distribution: int_uniform
+      max: 48
+      min: 12
+    weight_decay:
+      distribution: uniform
+      max: 0.02
+      min: 0.005
+    model:
+      values:
+        - GCN
+        - VarGCN
+        - Linear
+        - VarLinear
+        - GAT
+        - LinGAT
+        - GraphSAGE
+        - GraphConv
+        - VarGraphConv
+  program: train.py
