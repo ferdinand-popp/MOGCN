@@ -1,0 +1,18 @@
+created conda env with python v3.8.5 in /media/administrator/INTERNAL3_6TB/anaconda3/Deepan
+check CUDA version: nvcc --version # 10.1
+install torch from https://pytorch.org/get-started/locally/ --> conda install pytorch torchvision torchaudio cudatoolkit=10.1 -c pytorch
+check torch version (need >1.4): python -c "import torch; print(torch.__version__)"  # 1.7.1
+install dependencies for geometric:
+    pip install --no-index torch-scatter -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+    pip install --no-index torch-sparse -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+    pip install --no-index torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+    pip install --no-index torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.7.0+cu101.html
+    pip install torch-geometric
+
+version torch-geometric # 1.6.3
+
+Check for GPU Usage:
+    import torch
+    torch.cuda.device_count()
+    torch.cuda.get_device_name(0)
+    torch.cuda.is_available()
