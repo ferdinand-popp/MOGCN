@@ -1656,7 +1656,7 @@ if __name__ == '__main__':
         class LinGATEncoder(torch.nn.Module):
             def __init__(self, in_channels, out_channels, dropout):
                 super(LinGATEncoder, self).__init__()
-                self.dropout = 0.3
+                self.dropout = dropout
                 self.conv1 = GATv2Conv(in_channels, out_channels, heads=1, dropout=self.dropout,
                                        cached=True)
 
