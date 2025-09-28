@@ -62,12 +62,17 @@ def run_EPIC(df_labels, RNAseq):
 # df_merge = df_labels.merge(df_overview, on='Sample_ID', how='left')
 # print('Patient Samples: ' + str(len(df_merge.index)))
 
-path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'
+# Configuration: Update these paths according to your analysis results
+# TODO: Make this configurable through command line arguments or config file
+
+# Path to clustering results from MOGCN
+path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'  # Update this path
 folder = os.path.dirname(path)
 df_labels = pd.read_csv(path, index_col=1)
 df_labels = df_labels[['Sample_ID', 'Labels']]
 
-rna_path = r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq_36000_unscaled.csv"
+# Path to RNA-seq data for EPIC analysis  
+rna_path = r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq_36000_unscaled.csv"  # Update this path
 RNAseq = pd.read_csv(rna_path, header=0, index_col=None).iloc[:, 1:].sort_values(by='Sample_ID')
 
 run_EPIC(df_labels, RNAseq)
