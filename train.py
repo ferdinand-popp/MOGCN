@@ -1,3 +1,18 @@
+"""
+MOGCN: Multi-Omics Graph Convolutional Network
+==============================================
+
+For easier usage, consider using the configuration approach:
+1. Copy config_example.py to config.py
+2. Edit paths in config.py to match your data
+3. Run: python run_example.py
+
+For direct command line usage, update the paths in parse_arguments() below
+or use command line arguments to override the defaults.
+
+See README.md and DATA_PREPARATION.md for detailed setup instructions.
+"""
+
 import pandas as pd
 import numpy as np
 import argparse

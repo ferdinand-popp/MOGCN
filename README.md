@@ -28,7 +28,7 @@ MOGCN provides a comprehensive pipeline for multi-omics cancer subtype analysis 
 - 🔬 **TCGA data compatibility** with XENA browser integration
 ## Methodology
 
-MOGCN follows a four-stage pipeline for multi-omics analysis:
+MOGCN follows a four-stage pipeline for multi-omics analysis (see [WORKFLOW.md](WORKFLOW.md) for detailed diagram):
 
 ### 1. Multi-Modal Autoencoder Preprocessing
 - Each omics modality is processed through dedicated encoders
@@ -147,6 +147,14 @@ print(f"PyG version: {torch_geometric.__version__}")
 print(f"CUDA available: {torch.cuda.is_available()}")
 ```
 
+
+### Verify Installation
+
+```python
+python check_environment.py
+```
+
+This script will check all dependencies and provide installation guidance if anything is missing.
 
 ## Quick Start
 
@@ -273,6 +281,8 @@ Results are automatically logged to Weights & Biases for experiment tracking and
 - Check the [Issues](https://github.com/ferdinand-popp/MOGCN/issues) page
 - Review preprocessing notebooks for data format examples
 - Ensure all dependencies are properly installed
+- See [DATA_PREPARATION.md](DATA_PREPARATION.md) for detailed data setup guide
+- View [WORKFLOW.md](WORKFLOW.md) for algorithm overview and workflow diagram
 
 ## Contributing
 
