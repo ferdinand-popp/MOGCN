@@ -1120,24 +1120,18 @@ def parse_arguments():
                                  'Protein_array'])  # 'RNAseq', 'Somatic_mutation', 'RNAseq' #, 'CNV', 'Methylation', 'Protein_array'
     parser.add_argument('--paths_omics', '-po', nargs='+', type=str, help='The first omics file name.',
                         default=[
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq.csv',
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Copy_number_gene_level\TCGA_LUAD_CNV_gene.csv',
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\DNA_methylation\TCGA_LUAD_Methylation_450.csv',
-                            r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA_LUAD_mutation2.csv",
-                            r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\ProteinArray\LUAD_Protein_Array_Gene_Level.csv"
-                            # r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\miRNA_expression\TCGA_LUAD_miRNA.csv",
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\LUNG_RNA_seq.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_CNV_gene.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_Methylation_450.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_mutation2.csv'
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\LUNG_Protein_Array_Gene_Level.csv'
+                            r'data\LUAD_RNA_seq.csv',
+                            r'data\TCGA_LUAD_CNV_gene.csv',
+                            r'data\TCGA_LUAD_Methylation_450.csv',
+                            r"data\TCGA_LUAD_mutation2.csv",
+                            r"data\LUAD_Protein_Array_Gene_Level.csv"
                         ])
     parser.add_argument('--path_overview', '-p_overview', type=str, help='The clinical file including survival.',
-                        default=r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv")  # Z:\HiWi\Popp\TCGA_Breast_2022\TCGA_BRCA_overview_table.csv # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_overview_table.csv' #
+                        default=r"data\TCGA_LUNG_overview_table.csv")
     parser.add_argument('--append_clinical_features', '-p_clinical_feat', type=str, help='The clinical file features.',
-                        default=r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_clinical_input_features.csv")  # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_clinical_input_features.csv'  # Z:\HiWi\Popp\TCGA_Breast_2022\TCGA_BRCA_clinical_input_features.csv
+                        default=r"data\TCGA_LUAD_clinical_input_features.csv")
     parser.add_argument('--labeldata', '-ld', type=str, help='Optional label file for supervised run',
-                        default='')  # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_Tumor_Label.csv'
+                        default='')
 
     # overall settings
     parser.add_argument('--newdataset', default=True, action=argparse.BooleanOptionalAction)
