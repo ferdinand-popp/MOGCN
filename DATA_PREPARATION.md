@@ -6,16 +6,18 @@ This guide explains how to prepare your data for use with MOGCN, specifically fo
 
 1. Visit [UCSC Xena Browser](https://xenabrowser.net/)
 2. Navigate to "Data Sets" 
-3. Select your cancer type (e.g., "TCGA Lung Adenocarcinoma (LUAD)")
+3. Select your cancer type from GDC datasets (e.g., "GDC TCGA Lung Adenocarcinoma (LUAD)")
 4. Download the following data types:
 
 ### Required Data Files:
-- **Gene Expression**: RNA-seq data (e.g., "gene expression RNAseq")
+- **Gene Expression**: RNA-seq data (e.g., "gene expression RNAseq - STAR FPKM")
 - **Clinical Data**: Patient phenotype and survival information
 - **DNA Methylation**: 450K or EPIC methylation arrays (optional)
-- **Copy Number**: Gistic2 copy number data (optional)  
+- **Copy Number**: Gene level copy number data e.g. ASCAT3 (optional)  
 - **microRNA**: miRNA expression data (optional)
 - **Protein**: RPPA protein expression data (optional)
+- **Somatic Mutation Calls**: SNPs and small InDels (e.g. WXS) (optional)
+
 
 ## Step 2: Data Format Requirements
 
@@ -35,11 +37,11 @@ TCGA-05-4390-01A,4.123,3.678,...,7.234
 
 ## Step 3: Use Preprocessing Notebooks
 
-Use the provided Jupyter notebooks in `Preprocessing Input Files/` to convert XENA data:
+Use the provided Jupyter notebooks in `Preprocessing_input_files/` to convert XENA data:
 
 ### For Clinical Data:
 ```bash
-jupyter notebook "Preprocessing Input Files/preprocess_clinical.ipynb"
+jupyter notebook "Preprocessing_input_files/preprocess_clinical.ipynb"
 ```
 - Processes survival and phenotype data
 - Handles sample ID formatting
@@ -47,7 +49,7 @@ jupyter notebook "Preprocessing Input Files/preprocess_clinical.ipynb"
 
 ### For RNA-seq Data:
 ```bash
-jupyter notebook "Preprocessing Input Files/preprocess_RNAseq.ipynb"
+jupyter notebook "Preprocessing_input_files/preprocess_RNAseq.ipynb"
 ```
 - Normalizes expression values
 - Filters low-expression genes
@@ -58,6 +60,8 @@ jupyter notebook "Preprocessing Input Files/preprocess_RNAseq.ipynb"
 - `preprocess_cnv.ipynb`: Copy number variation
 - `preprocess_miRNA.ipynb`: microRNA expression
 - `preprocess_protein_array.ipynb`: Protein expression
+- `preprocess_somatic_mutation.ipynb`: Somatic mutation data preprocessing
+
 
 ## Step 4: Data Validation
 
@@ -95,20 +99,6 @@ PATHS_OMICS = [
 
 PATH_OVERVIEW = "data/your_clinical_data.csv"
 ```
-
-## Common Issues and Solutions
-
-### Issue: "No negative numbers" error
-**Solution**: Ensure all omics values are positive. Use log2(x+1) transformation or add constant offset.
-
-### Issue: Sample ID mismatch
-**Solution**: Check that clinical data and omics data have matching Sample_IDs. Use TCGA standard format.
-
-### Issue: Memory errors during processing
-**Solution**: 
-- Reduce number of features (filter genes/probes)
-- Process in smaller batches
-- Use data with fewer samples initially
 
 ## Example File Structure
 

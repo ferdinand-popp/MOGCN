@@ -28,7 +28,7 @@ MOGCN provides a comprehensive pipeline for multi-omics cancer subtype analysis 
 - 🔬 **TCGA data compatibility** with XENA browser integration
 ## Methodology
 
-MOGCN follows a four-stage pipeline for multi-omics analysis (see [WORKFLOW.md](WORKFLOW.md) for detailed diagram):
+MOGCN follows a four-stage pipeline for multi-omics analysis:
 
 ### 1. Multi-Modal Autoencoder Preprocessing
 - Each omics modality is processed through dedicated encoders
@@ -339,5 +339,3 @@ This project builds upon several important works in multi-omics analysis and gra
 - **Scikit-learn**: Pedregosa, F., et al. (2011). *Journal of Machine Learning Research, 12*, 2825-2830  
 - **Pandas**: McKinney, W. (2010). *Proceedings of the 9th Python in Science Conference*
 - **Weights & Biases**: [https://wandb.ai/](https://wandb.ai/)
-
-
