@@ -11,13 +11,13 @@ from clinical_selectivity import run_clinical_selectivity
 wandb.init(project="MoGCN_LUNG_jDR")
 
 data_name = 'LUNG'  # results20221006214008 # results20221224124726 # results20221227115340
-methods = {'MCIA': r"D:\FPOPP\momix\results20221227232925\factors_mcia.csv",
-           'MOFA2': r'D:\FPOPP\momix\results20221227232925\factors_mofa.csv',
-           'intNMF': r"D:\FPOPP\momix\results20221227232925\factors_intNMF.csv"
+methods = {'MCIA': 'momix_results/factors_mcia.csv',
+           'MOFA2': 'momix_results/factors_mofa.csv',
+           'intNMF': 'momix_results/factors_intNMF.csv'
            }
 
 # grab clinical annotation
-url_clinical = r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv'
+url_clinical = 'data/TCGA_LUNG_overview_table.csv'
 clinical_df_raw = pd.read_csv(url_clinical, header=0, index_col=None).iloc[:, 1:]
 clinical_df_raw.sort_values(by='Sample_ID', ascending=True, inplace=True)
 clinical_df_raw.set_index('Sample_ID', inplace=True)

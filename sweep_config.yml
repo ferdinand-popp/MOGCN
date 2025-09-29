@@ -1,6 +1,6 @@
   command:
     - ${env}
-    - D:\FPOPP\MoGCN\venv\Scripts\python.exe
+    - venv\python.exe
     - ${program}
     - ${args}
   method: bayes

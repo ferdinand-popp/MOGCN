@@ -1,3 +1,18 @@
+"""
+MOGCN: Multi-Omics Graph Convolutional Network
+==============================================
+
+For easier usage, consider using the configuration approach:
+1. Copy config_example.py to config.py
+2. Edit paths in config.py to match your data
+3. Run: python run_example.py
+
+For direct command line usage, update the paths in parse_arguments() below
+or use command line arguments to override the defaults.
+
+See README.md and DATA_PREPARATION.md for detailed setup instructions.
+"""
+
 import pandas as pd
 import numpy as np
 import argparse
@@ -25,7 +40,7 @@ from lifelines.statistics import multivariate_logrank_test
 from sklearn.manifold import TSNE, MDS
 import umap
 # custom
-from gcn_model import GCN
+from models import GCN
 import autoencoder_model
 from clinical_selectivity import run_clinical_selectivity
 import collections
@@ -1105,24 +1120,18 @@ def parse_arguments():
                                  'Protein_array'])  # 'RNAseq', 'Somatic_mutation', 'RNAseq' #, 'CNV', 'Methylation', 'Protein_array'
     parser.add_argument('--paths_omics', '-po', nargs='+', type=str, help='The first omics file name.',
                         default=[
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq.csv',
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Copy_number_gene_level\TCGA_LUAD_CNV_gene.csv',
-                            r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\DNA_methylation\TCGA_LUAD_Methylation_450.csv',
-                            r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA_LUAD_mutation2.csv",
-                            r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\ProteinArray\LUAD_Protein_Array_Gene_Level.csv"
-                            # r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\miRNA_expression\TCGA_LUAD_miRNA.csv",
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\LUNG_RNA_seq.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_CNV_gene.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_Methylation_450.csv',
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_mutation2.csv'
-                            # 'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\LUNG_Protein_Array_Gene_Level.csv'
+                            r'data\LUAD_RNA_seq.csv',
+                            r'data\TCGA_LUAD_CNV_gene.csv',
+                            r'data\TCGA_LUAD_Methylation_450.csv',
+                            r"data\TCGA_LUAD_mutation2.csv",
+                            r"data\LUAD_Protein_Array_Gene_Level.csv"
                         ])
     parser.add_argument('--path_overview', '-p_overview', type=str, help='The clinical file including survival.',
-                        default=r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv")  # Z:\HiWi\Popp\TCGA_Breast_2022\TCGA_BRCA_overview_table.csv # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_overview_table.csv' #
+                        default=r"data\TCGA_LUNG_overview_table.csv")
     parser.add_argument('--append_clinical_features', '-p_clinical_feat', type=str, help='The clinical file features.',
-                        default=r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_clinical_input_features.csv")  # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_clinical_input_features.csv'  # Z:\HiWi\Popp\TCGA_Breast_2022\TCGA_BRCA_clinical_input_features.csv
+                        default=r"data\TCGA_LUAD_clinical_input_features.csv")
     parser.add_argument('--labeldata', '-ld', type=str, help='Optional label file for supervised run',
-                        default='')  # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Clinic\TCGA_LUAD_Tumor_Label.csv'
+                        default='')
 
     # overall settings
     parser.add_argument('--newdataset', default=True, action=argparse.BooleanOptionalAction)
@@ -1589,133 +1598,6 @@ if __name__ == '__main__':
         # settings for graph layers
         num_features = data.num_features
         out_channels = config.out_channels
-
-
-        # declaring custom Encoder and Decoder Netstructures besides PYG autoencoders
-        class GCNEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(GCNEncoder, self).__init__()
-                self.conv1 = GCNConv(in_channels, 2 * out_channels, cached=True)
-                self.conv2 = GCNConv(2 * out_channels, out_channels, cached=True)
-                self.dp = torch.nn.Dropout(dropout)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                x = self.dp(x)
-                return self.conv2(x, edge_index)
-
-
-        class VariationalGCNEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(VariationalGCNEncoder, self).__init__()
-                self.conv1 = GCNConv(in_channels, 2 * out_channels, cached=True)
-                self.conv_mu = GCNConv(2 * out_channels, out_channels, cached=True)
-                self.conv_logstd = GCNConv(2 * out_channels, out_channels, cached=True)
-                self.dp = torch.nn.Dropout(dropout)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                x = self.dp(x)
-                return self.conv_mu(x, edge_index), self.conv_logstd(x, edge_index)
-
-
-        class LinearEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels):
-                super(LinearEncoder, self).__init__()
-                self.conv = GCNConv(in_channels, out_channels, cached=True)
-
-            def forward(self, x, edge_index):
-                return self.conv(x, edge_index)
-
-
-        class VariationalLinearEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels):
-                super(VariationalLinearEncoder, self).__init__()
-                self.conv_mu = GCNConv(in_channels, out_channels, cached=True)
-                self.conv_logstd = GCNConv(in_channels, out_channels, cached=True)
-
-            def forward(self, x, edge_index):
-                return self.conv_mu(x, edge_index), self.conv_logstd(x, edge_index)
-
-
-        class GATEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(GATEncoder, self).__init__()
-                self.in_head = 4
-                self.dropout = dropout
-                self.conv1 = GATv2Conv(in_channels, 2 * out_channels, heads=self.in_head, dropout=self.dropout,
-                                       cached=True)
-                self.conv2 = GATv2Conv(2 * out_channels * self.in_head, out_channels, heads=1,
-                                       cached=True)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                return self.conv2(x, edge_index)
-
-
-        class LinGATEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(LinGATEncoder, self).__init__()
-                self.dropout = dropout
-                self.conv1 = GATv2Conv(in_channels, out_channels, heads=1, dropout=self.dropout,
-                                       cached=True)
-
-            def forward(self, x, edge_index):
-                return self.conv1(x, edge_index)
-
-
-        class GraphSAGE(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(GraphSAGE, self).__init__()
-                self.conv1 = SAGEConv(in_channels, 2 * out_channels,
-                                      cached=True)
-                self.conv2 = SAGEConv(2 * out_channels, out_channels,
-                                      cached=True)
-                self.dp = torch.nn.Dropout(dropout)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                x = self.dp(x)
-                return self.conv2(x, edge_index)
-
-
-        class GraphConvEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(GraphConvEncoder, self).__init__()
-                self.conv1 = GraphConv(in_channels, 2 * out_channels, cached=True)
-                self.conv2 = GraphConv(2 * out_channels, out_channels, cached=True)
-                self.dp = torch.nn.Dropout(dropout)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                x = self.dp(x)
-                return self.conv2(x, edge_index)
-
-
-        class VariationalGraphConvEncoder(torch.nn.Module):
-            def __init__(self, in_channels, out_channels, dropout):
-                super(VariationalGraphConvEncoder, self).__init__()
-                self.conv1 = GraphConv(in_channels, 2 * out_channels, cached=True)
-                self.conv_mu = GraphConv(2 * out_channels, out_channels, cached=True)
-                self.conv_logstd = GraphConv(2 * out_channels, out_channels, cached=True)
-                self.dp = torch.nn.Dropout(dropout)
-
-            def forward(self, x, edge_index):
-                x = self.conv1(x, edge_index).relu()
-                x = self.dp(x)
-                return self.conv_mu(x, edge_index), self.conv_logstd(x, edge_index)
-
-
-        class MLP(torch.nn.Module):
-            def __init__(self, in_channels, out_channels):
-                super(MLP, self).__init__()
-                self.lin1 = torch.nn.Linear(in_channels, 64)
-                self.lin2 = torch.nn.Linear(64, out_channels)
-
-            def forward(self, z):
-                z = torch.relu(self.lin1(z))
-                return self.lin2(z)
-
 
         '''Selection of Model'''
         model_name = config.model

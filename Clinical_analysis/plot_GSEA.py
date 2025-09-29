@@ -10,13 +10,13 @@ import plotly.graph_objects as go
 pio.templates.default = "plotly_white"
 # run = wandb.init(project=f"Cluster_analysis", notes='setup')
 # Load the data
-# df_overview = pd.read_csv(r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv", index_col=1)
+# df_overview = pd.read_csv(r"data\TCGA_LUNG_overview_table.csv", index_col=1)
 #
 # df_merge = df_labels.merge(df_overview, on='Sample_ID', how='left')
 # print('Patient Samples: ' + str(len(df_merge.index)))
 
 # load labels
-path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'
+path = 'sweeps/labels.csv'
 folder = os.path.dirname(path)
 df_labels = pd.read_csv(path, index_col=1)
 df_labels = df_labels[['Sample_ID', 'Labels']]
@@ -24,7 +24,7 @@ if 0 in df_labels['Labels']:
     df_labels['Labels'] = df_labels['Labels'] + 1
 
 # load omics
-path = r"Z:\HiWi\Popp\Analysis_LUAD_clusters_20230103\Output_GSEA_20230104\GSEA_RESULTS_NES_QVAL_20230104.xlsx" #normal or missense
+path = "gsea_results/GSEA_RESULTS_NES_QVAL.xlsx" #normal or missense
 
 ##contionue here!
 df = pd.read_excel(path)
