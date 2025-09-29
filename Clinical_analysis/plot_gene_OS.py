@@ -4,7 +4,7 @@ import numpy as np
 from clinical_selectivity import create_survival_plot, ensg_to_gene_name
 
 # load labels
-path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'
+path = 'sweeps/labels.csv'
 folder = os.path.dirname(path)
 df_labels = pd.read_csv(path, index_col=1)
 df_labels = df_labels[['Sample_ID', 'Labels']]
@@ -12,12 +12,12 @@ if 0 in df_labels['Labels']:
     df_labels['Labels'] = df_labels['Labels'] + 1
 
 # Load the data
-df_overview = pd.read_csv(r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv", index_col=1)
+df_overview = pd.read_csv("data/TCGA_LUNG_overview_table.csv", index_col=1)
 df_merge = df_labels.merge(df_overview, on='Sample_ID', how='left')
 print('Patient Samples: ' + str(len(df_merge.index)))
 
 # load rnaseq gene symbol
-rna_path = r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq_36000_unscaled.csv"
+rna_path = "data/LUAD_RNA_seq_36000_unscaled.csv"
 RNAseq = pd.read_csv(rna_path, header=0, index_col=None).iloc[:, 1:].sort_values(by='Sample_ID')
 RNAseq.set_index('Sample_ID', inplace=True)
 # replace ENSG with Gene name

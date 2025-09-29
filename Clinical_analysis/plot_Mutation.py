@@ -26,13 +26,13 @@ def plot_venn(df):
 pio.templates.default = "simple_white"
 # run = wandb.init(project=f"Cluster_analysis", notes='setup')
 # Load the data
-# df_overview = pd.read_csv(r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv", index_col=1)
+# df_overview = pd.read_csv(r"data\TCGA_LUNG_overview_table.csv", index_col=1)
 #
 # df_merge = df_labels.merge(df_overview, on='Sample_ID', how='left')
 # print('Patient Samples: ' + str(len(df_merge.index)))
 
 # load labels
-path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'
+path = 'sweeps/labels.csv'
 folder = os.path.dirname(path)
 df_labels = pd.read_csv(path, index_col=1)
 df_labels = df_labels[['Sample_ID', 'Labels']]
@@ -40,7 +40,7 @@ if 0 in df_labels['Labels']:
     df_labels['Labels'] = df_labels['Labels'] + 1
 
 # # load omics
-# path = r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA_LUAD_mutation2.csv' #normal or missense
+# path = r'data\TCGA_LUAD_mutation2.csv' #normal or missense
 # df_mutation = pd.read_csv(path, header=0, index_col=None).iloc[:, 1:].sort_values(by='Sample_ID')
 # df_mutation.set_index('Sample_ID', inplace=True)
 #
@@ -76,7 +76,7 @@ print(not_b)
 print(not_c)
 
 
-url = r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA-LUAD.mutect2_snv.tsv' # r"Z:\HiWi\Popp\TCGA_Breast_2022\TCGA-BRCA.mutect2_snv.tsv" # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA-LUAD.mutect2_snv.tsv'
+url = 'data/TCGA-LUAD.mutect2_snv.tsv' # r"Z:\HiWi\Popp\TCGA_Breast_2022\TCGA-BRCA.mutect2_snv.tsv" # r'Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\Somatic_mutation\TCGA-LUAD.mutect2_snv.tsv'
 df_LUAD = pd.read_csv(url, sep='\t', index_col=0)
 df_LUAD = df_LUAD[['gene', 'effect']] # kick chr and vaf
 
@@ -119,4 +119,3 @@ for name, df_sub in df_group:
     fig.write_image(os.path.join(folder, 'mutations',f'top20_{name}.svg'))
 
 a = set(counts.gene)
-

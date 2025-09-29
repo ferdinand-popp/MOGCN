@@ -1,6 +1,6 @@
 library(ggvenn)
 
-data <- read.csv("D:\\FPOPP\\MoGCN\\result\\galant_sweep_14\\top20_mutation.csv")
+data <- read.csv("sweeps\\top20_mutation.csv")
 
 x <- list(
   'Cluster I' = data[,'I'],
@@ -13,4 +13,4 @@ venn <- ggvenn(
   text_size  = 12,
   show_percentage = FALSE
   )
-ggsave("D:\\FPOPP\\MoGCN\\result\\galant_sweep_14\\top20_mutation.png", plot = venn)
+ggsave("sweeps\\top20_mutation.png", plot = venn)

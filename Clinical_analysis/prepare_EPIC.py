@@ -29,7 +29,7 @@ def subset_df(df, labels, df_omic):
 
 # to do get dict and use as lookup
 def ensg_to_gene_name(id_list):
-    df = pd.read_csv(r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\gencode.v22.annotation.gene.probeMap", sep='\t')
+    df = pd.read_csv("data/gencode.v22.annotation.gene.probeMap", sep='\t')
     gene_values = []
     for _id in id_list:
         gene_values.append(df[df['id'] == _id]['gene'].values[0])
@@ -57,7 +57,7 @@ def run_EPIC(df_labels, RNAseq):
 
 # run = wandb.init(project=f"Cluster_analysis", notes='setup')
 # Load the data
-# df_overview = pd.read_csv(r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUNG\TCGA_LUNG_overview_table.csv", index_col=1)
+# df_overview = pd.read_csv(r"data\TCGA_LUNG_overview_table.csv", index_col=1)
 #
 # df_merge = df_labels.merge(df_overview, on='Sample_ID', how='left')
 # print('Patient Samples: ' + str(len(df_merge.index)))
@@ -66,13 +66,13 @@ def run_EPIC(df_labels, RNAseq):
 # TODO: Make this configurable through command line arguments or config file
 
 # Path to clustering results from MOGCN
-path = r'D:\FPOPP\MoGCN\result\galant_sweep_14\labels.csv'  # Update this path
+path = 'sweeps/labels.csv'
 folder = os.path.dirname(path)
 df_labels = pd.read_csv(path, index_col=1)
 df_labels = df_labels[['Sample_ID', 'Labels']]
 
 # Path to RNA-seq data for EPIC analysis  
-rna_path = r"Z:\HiWi\Popp\TCGA_NSCLC_2022\LUAD\RNAseq\LUAD_RNA_seq_36000_unscaled.csv"  # Update this path
+rna_path = "data/LUAD_RNA_seq_36000_unscaled.csv"
 RNAseq = pd.read_csv(rna_path, header=0, index_col=None).iloc[:, 1:].sort_values(by='Sample_ID')
 
 run_EPIC(df_labels, RNAseq)
